@@ -14,13 +14,13 @@
   
 ## Agenda
 
-1. Introducción al taller
-1.1. [Introducción a R-Ladies (Beatriz Hernández)]()
+1. Introducción al taller<br>
+1.1. [Introducción a R-Ladies (Beatriz Hernández)]()<br>
 1.2. [Introducción a GeoInquietos Madrid (Ramiro Aznar)]()
 
 2. [Mapas y buenas prácticas cartográficas (Ramiro Aznar)]()
 
-3. Visualización de datos con R
-3.1. [Manejo de datos espaciales con R](secciones/maps.md)
-3.2. [ggplot2](secciones/ggplot2.md)
+3. Visualización de datos con R<br>
+3.1. [Manejo de datos espaciales con R](secciones/maps.md)<br>
+3.2. [ggplot2](secciones/ggplot2.md)<br>
 3.3. [ggmap](secciones/ggmap.md)
