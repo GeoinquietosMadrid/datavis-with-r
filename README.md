@@ -18,7 +18,7 @@
 1.1. [Introducción a R-Ladies (Beatriz Hernández)]()<br>
 1.2. [Introducción a GeoInquietos Madrid (Ramiro Aznar)]()
 
-2. [Mapas y buenas prácticas cartográficas (Ramiro Aznar)]()
+2. [Mapas y buenas prácticas cartográficas (Ramiro Aznar)](https://docs.google.com/presentation/d/12PT5exs1mhb1he-wxPe1t7-IkOmmUKyMUaGITv0JeUA/edit?usp=sharing)
 
 3. Visualización de datos con R<br>
 3.1. [Manejo de datos espaciales con R](secciones/maps.md)<br>
