@@ -16,7 +16,7 @@
 
 1. Introducción al taller<br>
 1.1. [Introducción a R-Ladies (Beatriz Hernández)]()<br>
-1.2. [Introducción a GeoInquietos Madrid (Ramiro Aznar)]()
+1.2. [Introducción a GeoInquietos Madrid (Ramiro Aznar)](https://docs.google.com/presentation/d/1O68oWEfJAzMqkrF36T8rUqmRc7dSioKuCjLzjbFdyuE/edit?usp=sharing)
 
 2. [Mapas y buenas prácticas cartográficas (Ramiro Aznar)](https://docs.google.com/presentation/d/12PT5exs1mhb1he-wxPe1t7-IkOmmUKyMUaGITv0JeUA/edit?usp=sharing)
 
