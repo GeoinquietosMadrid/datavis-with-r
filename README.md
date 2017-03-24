@@ -15,7 +15,7 @@
 ## Agenda
 
 1. Introducción al taller<br>
-1.1. [Introducción a R-Ladies]()<br>
+1.1. [Introducción a R-Ladies](https://drive.google.com/open?id=0B-oSdo75MzpgZVRTREl1Mndpc2s)<br>
 1.2. [Introducción a GeoInquietos Madrid](https://docs.google.com/presentation/d/1O68oWEfJAzMqkrF36T8rUqmRc7dSioKuCjLzjbFdyuE/edit?usp=sharing)
 
 2. [Mapas y buenas prácticas cartográficas](https://docs.google.com/presentation/d/12PT5exs1mhb1he-wxPe1t7-IkOmmUKyMUaGITv0JeUA/edit?usp=sharing)
