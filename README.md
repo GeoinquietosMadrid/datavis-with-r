@@ -21,7 +21,7 @@
 2. [Mapas y buenas prácticas cartográficas](https://docs.google.com/presentation/d/12PT5exs1mhb1he-wxPe1t7-IkOmmUKyMUaGITv0JeUA/edit?usp=sharing)
 
 3. Visualización de datos con R<br>
-3.1. Manejo de datos espaciales con R [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/maps.html)|[slides](https://drive.google.com/open?id=0B2wHnLxPlbTHdjNfbFh0M3Q0QWM)]<br>
+3.1. Manejo de datos espaciales con R [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/maps/index.html)|[slides](https://drive.google.com/open?id=0B2wHnLxPlbTHdjNfbFh0M3Q0QWM)]<br>
 3.2. [ggplot2](secciones/ggplot2.md)<br>
 3.3. [ggmap](secciones/ggmap.md)
 
