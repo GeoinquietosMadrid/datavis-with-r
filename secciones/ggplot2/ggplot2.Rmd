@@ -1,0 +1,329 @@
+---
+title: "Taller ggplot2 - Geoinquietos + RLadies Madrid"
+author: María Medina - @mariamedp
+output: 
+  html_document: default
+  toc: true
+  theme: united
+date: "25 marzo 2017"
+---
+
+---------------------
+
+```{r, echo=FALSE}
+options(width=200)
+```
+
+```{r setup}
+library(ggplot2)
+
+listings_url <- "http://data.insideairbnb.com/spain/comunidad-de-madrid/madrid/2015-10-02/visualisations/listings.csv"
+airbnb_listings <- read.csv(listings_url, colClasses=c("host_id"="factor"), na.strings="")
+reviews_url <- "http://data.insideairbnb.com/spain/comunidad-de-madrid/madrid/2015-10-02/visualisations/reviews.csv"
+airbnb_reviews <- read.csv(reviews_url, colClasses=c("date"="Date"))
+
+```
+
+
+### Primeros pasos
+
+**Ejemplo 1**: queremos pintar longitud vs. latitud de los apartamentos.
+
+Versión detallada
+```{r, fig.width=3, fig.height=3}
+ggplot() +
+  layer(
+    data = airbnb_listings,
+    mapping = aes(x = longitude, y = latitude),
+    geom = "point",
+    stat = "identity",
+    position = "identity"
+  ) +
+  scale_x_continuous() +
+  scale_y_continuous() +
+  coord_cartesian()
+```
+
+Versión resumida equivalente (más común)
+```{r, fig.width=3, fig.height=3}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude)) + geom_point()
+```
+
+
+### Jugando con las scales
+
+**Ejemplo 2**: nos gustaría añadir información al gráfico anterior, coloreando los puntos según el tipo de habitación del que se trate.
+
+Mapeamos `room_type` a la aesthetic `color`:
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=room_type)) + geom_point()
+```
+
+Como `room_type` es una variable categórica, la scale por defecto es la discreta (`scale_color_discrete()`). Podemos cambiarla para poner los colores que más nos gusten.
+
+Opción 1: establecer los colores manualmente
+
+*Por defecto asigna los colores por orden*
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=room_type)) + geom_point() +
+  scale_color_manual(values=c("dark green", "orange", "black")) 
+```
+
+
+*Pero también se le puede decir qué color corresponde a qué valor de la variable*
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=room_type)) + geom_point() +
+  scale_color_manual(values=c("Private room"="orange", "Shared room"="black", "Entire home/apt"="dark green")) 
+```
+
+
+Opción 2: elegir de paletas predefinidas:
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=room_type)) + geom_point() +
+  scale_color_brewer(palette="Set2")
+```
+
+Más paletas discretas (y también continuas) en el último apartado de http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+
+```{r echo=FALSE, out.width='20%'}
+knitr::include_graphics("http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/figure/unnamed-chunk-14-1.png")
+```
+
+
+**Ejemplo 3**: ahora queremos colorear por precio, en lugar de por tipo de habitación.
+
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=price)) + geom_point()
+```
+
+Esta vez la variable es continua, y la scale por defecto es (`scale_color_continuous()`). Podemos modificar los colores del gradiente usando por ejemplo `scale_color_gradient()` o `scale_color_gradientn`:
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=price)) + geom_point() +
+  scale_color_gradient(low="yellow", high="red")
+```
+
+¿Qué problema vemos? La mayoría de apartamentos tiene un precio por debajo de los 1000€ y por tanto casi todos los puntos salen amarillos. Para que esto no ocurra podemos aplicarle una transformación logarítmica a la scale:
+```{r, fig.width=6, fig.height=4}
+ggplot(airbnb_listings, aes(x=longitude, y=latitude, color=price)) + geom_point() +
+  scale_color_gradient(low="yellow", high="red", trans="log")
+```
+
+
+### Más sobre los stats
+
+**Ejemplo 4**: nos gustaría ver qué tipos de habitaciones son los más frecuentes. Para ello usamos la `geom` "bar" y nos aprovechamos del `stat` que usa por defecto: "count", que lo que hace es contar el número de ocurrencias.
+
+Observación: con el parámetro `fill` podemos establecer el color del relleno. Si no lo mapeamos a una variable, será un atributo fijo común a toda la capa.
+
+```{r, fig.width=4, fig.height=3}
+ggplot(airbnb_listings, aes(x=room_type)) + geom_bar(fill="red")
+```
+
+Si queremos mostrar etiquetas con las cantidades podemos usar el parámetro `label` junto con la geometría `label` o `text`. Nuestro dataset en principio no tiene una variable para el número de apartamentos por habitación, pero al aplicar el stat "count" se crea una variable extra, `..count..`, a la que podemos hacer referencia.
+
+```{r, fig.width=4, fig.height=3}
+ggplot(airbnb_listings, aes(x=room_type)) + geom_bar(fill="red") + geom_label(stat="count", aes(label=..count..), size=3.5)
+```
+
+
+**Ejemplo 5**: mostrar el número de apartamentos que tiene cada distrito
+
+Si queremos crear un gráfico de barras en el que la altura represente un valor previamente calculado, y no un conteo, deberemos mapear la posición `y` y sobreescribir el stat por defecto y usar "identity" en su lugar:
+
+```{r, fig.width=12, fig.height=3}
+# Sacamos el listado de hosts únicos
+neighb_roomcount <- as.data.frame(table(airbnb_listings$neighbourhood_group))
+names(neighb_roomcount) <- c("neighbourhood_group", "room_count")
+
+ggplot(neighb_roomcount, aes(x=neighbourhood_group, y=room_count)) + geom_bar(stat="identity")
+```
+
+
+Pero el gráfico que nos sale es ilegible porque hay demasiados barrios cuando en realidad no tienen casi apartamentos.
+
+Vamos a sacar solo ranking del top 10. Para ello, primero tenemos que hacer que las barras salgan ordenadas de mayor a menor en función del valor de `room_count`.
+
+Opción 1: ordenar directamente en el gráfico usando la función `reorder`.
+```{r, fig.width=12, fig.height=3}
+ggplot(neighb_roomcount, aes(x=reorder(neighbourhood_group, -room_count), y=room_count)) +
+  geom_bar(stat="identity")
+```
+
+Opción 2: ordenar los niveles del factor `neighb_roomcount`. Como luego vamos a querer seleccionar los hosts con valores más altos, es preferible hacerlo de esta forma para tener identificados los hosts que nos interesan.
+```{r, fig.width=15, fig.height=5}
+# Ordenar hosts por nº de apartamentos
+neighb_roomcount <- neighb_roomcount[order(neighb_roomcount$room_count, decreasing=TRUE),]
+
+# Establecer nuevo orden en los niveles del factor
+neighb_order <- neighb_roomcount$neighbourhood_group # Vector de nombres ordenados
+neighb_roomcount$neighbourhood_group <- factor(neighb_roomcount$neighbourhood_group, levels=neighb_order) 
+
+neighb_top <- head(neighb_roomcount, 10)
+
+# Pintar
+ggplot(neighb_top, aes(x=neighbourhood_group, y=room_count)) +
+  geom_bar(stat="identity")
+```
+
+
+**Ejemplo 6**: evolución temporal del número de reviews que se hacen por semana.
+
+En el ejemplo anterior estábamos mostrando una variable **categórica** en el eje x. Si queremos representar una serie temporal, el eje x va a ser **continuo**. Para realizar conteos de frecuencia (de reviews en este caso) sobre una variable continua usamos `geom_histogram()` con el stat por defecto: "bin", que divide el continuo en rangos (bins) y luego hace el conteo por cada bin. Con el parámetro `binwidth` le indicamos la longitud del rango (en nuestro caso, 7 días).
+
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date)) + geom_histogram(binwidth=7)
+```
+
+Si por un casual queremos mostrar densidad en vez de frecuencias en el eje y, podemos hacerlo mapeando la posición `y` la variable `..density..`, que se genera al aplicar el tipo de transformación estadística `bin`.
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date, y=..density..)) + geom_histogram(binwidth=7)
+```
+
+No es obligatorio usar la geometría de barras, podemos poner por ejemplo una línea.
+
+Opción 1: usar `geom_line()` y modificar el stat (porque su stat por defecto es "identity").
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date)) + geom_line(stat="bin", binwidth=7)
+```
+
+Opción 2: usar `stat_bin()` y modificar el geom (porque su geom por defecto es "bar").
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date)) + stat_bin(binwidth=7, geom="line")
+```
+
+
+
+### Más sobre positions
+
+Volvemos sobre el **Ejemplo 5**. Queremos mejorarlo incorporando la información sobre qué tipo de habitaciones son las que predominan en cada barrio del ranking. Para ello metemos `room_type` como color de relleno.
+
+```{r, fig.width=15, fig.height=4}
+airbnb_listings$neighbourhood_group <- factor(airbnb_listings$neighbourhood_group, levels=neighb_order) # Ordenamos factor original
+ggplot(subset(airbnb_listings, neighbourhood_group %in% neighb_top$neighbourhood_group), 
+       aes(x=neighbourhood_group, fill=room_type)) + geom_bar()
+```
+
+Cuando hacemos esto, los grupos se colocan uno encima de otro. Internamente, esto se está controlando mediante la `position` por defecto para estos casos: "stack".
+
+Si queremos que los grupos se coloquen uno al lado de otro, podemos usar la `position` "dodge".
+```{r, fig.width=15, fig.height=4}
+ggplot(subset(airbnb_listings, neighbourhood_group %in% neighb_top$neighbourhood_group), 
+       aes(x=neighbourhood_group, fill=room_type)) + geom_bar(position="dodge")
+```
+
+
+Ahora mejoraremos el **Ejemplo 6**: queremos desglosar el histograma por el tipo de habitación. Para meter `room_type` como color de relleno debemos incorporarlo primero al dataset `airbnb_reviews`.
+```{r, fig.width=15, fig.height=3}
+airbnb_reviews <- merge(airbnb_reviews, airbnb_listings[c("id", "room_type")], by.x="listing_id", by.y="id")
+
+ggplot(airbnb_reviews, aes(x=date, fill=room_type)) + geom_histogram(binwidth=7)
+```
+
+Para ver la proporción de cada tipo de habitación a lo largo del tiempo, podemos usar la `position` "fill", que lo que hace es normalizar las longitudes de las barras para que cada una represente el 100%.
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date, fill=room_type)) + geom_histogram(binwidth=7, position="fill")
+```
+
+Si queremos comparar las alturas de cada grupo haciendo que todas las barras empiecen en el origen, en este caso no podemos usar "dodge" porque el eje x es demasiado extenso. Otra opción es usar "identity", que coloca las barras superpuestas. Para asegurarnos de que no queda nada por detrás tapado podemos meter un poco de transparencia (fija) con el atributo `alpha`.
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date, fill=room_type)) + geom_histogram(binwidth=7, position="identity", alpha=0.7)
+```
+
+También podemos pintar esto último con líneas:
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date, color=room_type)) + geom_line(stat="bin", binwidth=7, position="identity")
+```
+
+Si por algún motivo no queremos que salgan con colores deberemos usar el parámetro `group` para realizar la agrupación por `room_type`:
+```{r, fig.width=15, fig.height=3}
+ggplot(airbnb_reviews, aes(x=date, group=room_type)) + geom_line(stat="bin", binwidth=7, position="identity")
+```
+
+
+### Facets
+
+Los `facets` sirven para hacer varios subplots en función de una variable de agrupación.
+
+**Ejemplo 7**: número de reviews por barrio y tipo de habitación en el distrito Centro.
+```{r, fig.width=15, fig.height=10}
+airbnb_reviews <- merge(airbnb_reviews, airbnb_listings[c("id", "neighbourhood_group", "neighbourhood")], 
+                        by.x="listing_id", by.y="id")
+
+ggplot(subset(airbnb_reviews, neighbourhood_group == "Centro"), aes(x=date, fill=room_type)) + 
+  geom_histogram(binwidth=7, position="identity") + facet_wrap(~ neighbourhood, ncol=1)
+```
+
+
+### Modificadores de apariencia
+
+**Ejemplo final**: precio medio por distrito y tipo de habitación.
+
+```{r, fig.width=15, fig.height=5}
+ggplot(airbnb_listings, aes(x=neighbourhood_group, y=price, fill=room_type)) + 
+  stat_summary(fun.y=median, geom="bar") + 
+  facet_wrap(~ room_type, ncol=3) 
+```
+
+Como la lista de distritos es larga, quedará mejor si ponemos las barras horizontales. Para eso usamos `coord_flip()`.
+
+```{r, fig.width=15, fig.height=10}
+ggplot(airbnb_listings, aes(x=neighbourhood_group, y=price, fill=room_type)) + 
+  stat_summary(fun.y=median, geom="bar") + 
+  facet_wrap(~ room_type, ncol=3) +
+  coord_flip()
+```
+
+El outlier de La Latina hace que el resto de secciones no queden bien, porque comparten la escala del eje del precio. Podemos cambiar esto con el parámetro `scale` de `facet_wrap()`.
+
+```{r, fig.width=15, fig.height=10}
+ggplot(airbnb_listings, aes(x=neighbourhood_group, y=price, fill=room_type)) + 
+  stat_summary(fun.y=median, geom="bar") + 
+  facet_wrap(~ room_type, ncol=3, scale="free_x") +
+  coord_flip()
+```
+
+
+Queremos meter también una etiqueta con el número de observaciones que entran en cada bloque. Para ello usamos `geom_text()` con el `stat` "count". El parámetro hjust controla la posición relativa de las etiquetas (añade o quita margen).
+```{r, fig.width=15, fig.height=10}
+ggplot(airbnb_listings, aes(x=neighbourhood_group, y=price, fill=room_type)) + 
+  stat_summary(fun.y=median, geom="bar") + 
+  geom_text(y=0, stat="count", aes(label=paste(..count.., "obs.")), hjust=-0.1) +
+  facet_wrap(~ room_type, ncol=3, scale="free_x") +
+  coord_flip()
+```
+
+Cosas que mejorar:
+ - La leyenda con los colores no nos aporta nada porque ya tenemos los títulos en los bloques del facet. La podemos quitar usando la función `guides()`. 
+ - Para cambiar los nombres de los ejes y añadir un título podemos usar la función `labs()`.
+```{r, fig.width=15, fig.height=10}
+ggplot(airbnb_listings, aes(x=neighbourhood_group, y=price, fill=room_type)) + 
+  stat_summary(fun.y=median, geom="bar") + 
+  geom_text(y=0, stat="count", aes(label=paste(..count.., "obs.")), hjust=-0.1) +
+  facet_wrap(~ room_type, ncol=3, scale="free_x") +
+  coord_flip() +
+  guides(fill=FALSE) + 
+  labs(x="Distrito", y="Precio", title="Precio medio por distrito y tipo de apartamento")
+```
+
+Por defecto, los gráficos de ggplot2 salen con fondo gris y guías blancas. Eso (y otras muchas cosas como el tamaño de letra, el formato de las etiquetas, las leyendas, etc.) viene definido por el tema del gráfico. Para cambiarlo se usa la función `theme()`.
+```{r, fig.width=15, fig.height=10}
+ggplot(airbnb_listings, aes(x=neighbourhood_group, y=price, fill=room_type)) + 
+  stat_summary(fun.y=median, geom="bar") + 
+  geom_text(y=0, stat="count", aes(label=paste(..count.., "obs.")), hjust=-0.1) +
+  facet_wrap(~ room_type, ncol=3, scale="free_x") +
+  coord_flip() +
+  guides(fill=FALSE) + labs(x="Distrito", y="Precio", title="Precio medio por distrito y tipo de apartamento") +
+  theme(
+    panel.background = element_rect(fill = "white", color="gray70"),
+    panel.grid.major = element_line(colour = "gray90"),
+    panel.grid.minor = element_line(colour = "gray95"),
+    plot.title = element_text(size = 18, face = 'bold', colour = "gray30", hjust=0.5, vjust=1.5),
+    axis.title.x = element_text(size = 12, vjust=-0.5),
+    axis.title.y = element_text(size = 12, vjust=1),
+    axis.text = element_text(size = 10),
+    axis.ticks = element_line(colour = "gray90")
+  )
+```
+
+
+
