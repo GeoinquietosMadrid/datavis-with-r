@@ -24,3 +24,7 @@
 3.1. Manejo de datos espaciales con R [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/index.html)|[slides](https://drive.google.com/open?id=0B2wHnLxPlbTHdjNfbFh0M3Q0QWM)]<br>
 3.2. [ggplot2](secciones/ggplot2.md)<br>
 3.3. [ggmap](secciones/ggmap.md)
+
+## Data
+
+Puedes descargar los datos de Airbnb haciendo click en [este enlace](http://data.insideairbnb.com/spain/comunidad-de-madrid/madrid/2015-10-02/visualisations/listings.csv).
