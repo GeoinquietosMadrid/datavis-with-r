@@ -2,6 +2,8 @@
 
 ![datavis-r](http://medialab-prado.es/mmedia/19/19925/500_0.png)
 
+## [http://bit.ly/dataviz-with-r](http://bit.ly/dataviz-with-r)
+
 ## Detalles
 
 * Contenido: segunda sesión de programación GIS centrado en la visualización de datos con R
@@ -25,6 +27,6 @@
 3.2. ggplot2 [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggplot2/taller/index.html)|[slides](https://drive.google.com/file/d/0B6CyZvXW9ko4bDRMTU45b251MGs/view)]<br>
 3.3. ggmap [[parte 1](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggmap/parte1/index.html)|[parte 2](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggmap/parte2/index.html)|[slides](https://drive.google.com/file/d/0B2DnokWXXy4PdWRkbklpY3VRd0k/edit)]
 
-## Data
+## Datos
 
 Puedes descargar los datos de Airbnb haciendo click en [este enlace](http://data.insideairbnb.com/spain/comunidad-de-madrid/madrid/2015-10-02/visualisations/listings.csv).
