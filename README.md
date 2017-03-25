@@ -22,7 +22,7 @@
 
 3. Visualización de datos con R<br>
 3.1. Manejo de datos espaciales con R [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/maps/index.html)|[slides](https://drive.google.com/open?id=0B2wHnLxPlbTHdjNfbFh0M3Q0QWM)]<br>
-3.2. [ggplot2](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggplot2/taller/index.html)<br>
+3.2. ggplot2 [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggplot2/taller/index.html)|[slides](https://drive.google.com/file/d/0B6CyZvXW9ko4bDRMTU45b251MGs/view)]<br>
 3.3. ggmap [[parte 1](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggmap/parte1/index.html)|[parte 2](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggmap/parte2/index.html)|[slides]()]
 
 ## Data
