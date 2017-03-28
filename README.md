@@ -24,7 +24,7 @@
 
 3. Visualización de datos con R<br>
 3.1. Manejo de datos espaciales con R [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/maps/index.html)|[slides](https://github.com/elenagaby/MapswithR/files/872243/Presentacion_mapsR.pdf)|[script](https://raw.githubusercontent.com/elenagaby/MapswithR/master/Maps.Rmd)]<br>
-3.2. ggplot2 [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggplot2/taller/index.html)|[slides](https://github.com/elenagaby/MapswithR/files/872243/Presentacion_mapsR.pdf)|[script](https://raw.githubusercontent.com/GeoinquietosMadrid/datavis-with-r/master/secciones/ggplot2/ggplot2.Rmd)]<br>
+3.2. ggplot2 [[taller](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggplot2/taller/index.html)|[slides](https://drive.google.com/file/d/0B6CyZvXW9ko4bDRMTU45b251MGs/view)|[script](https://raw.githubusercontent.com/GeoinquietosMadrid/datavis-with-r/master/secciones/ggplot2/ggplot2.Rmd)]<br>
 3.3. ggmap [[parte 1](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggmap/parte1/index.html)|[parte 2](https://geoinquietosmadrid.github.io/datavis-with-r/secciones/ggmap/parte2/index.html)|[slides](https://drive.google.com/file/d/0B2DnokWXXy4PdWRkbklpY3VRd0k/edit)|[script](https://raw.githubusercontent.com/GeoinquietosMadrid/datavis-with-r/master/secciones/ggmap/ggmap.taller.RLadies.R)]
 
 ## Datos
